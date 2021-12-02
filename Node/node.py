@@ -11,7 +11,7 @@ class Node:
         self.cost = cost
 
     def __eq__(self, o: object) -> bool:
-        return self.cost == o.cost if o is Node else False
+        return self.state == o.state if type(o) is Node else False
 
     def __ne__(self, other):
         return not (self == other)
@@ -20,7 +20,10 @@ class Node:
         return self.cost < other.cost
 
     def __str__(self) -> str:
-        return str(f"position: {self.state} \n operators: {self.operators}")
+        return f"pos: {self.state}\tops: {self.operators}\tcost: {self.cost}"
+
+    def __repr__(self) -> str:
+        return self.__str__()
 
     def expand(self):
         raise NotImplemented

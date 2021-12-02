@@ -4,7 +4,8 @@ import heapq
 class FrontierSearch:
     def __init__(self, initial: Node, goal: Node) -> None:
         super().__init__()
-        self.open_list = heapq.heapify([initial])
+        self.open_list =[initial]
+        heapq.heapify(self.open_list)
         self.goal = goal
         self.max_nodes = 1
 
@@ -18,5 +19,20 @@ class FrontierSearch:
         if len(self.open_list) == 0:
             raise Exception("The are no nodes to expansion")
         next = heapq.heappop(self.open_list)
+        if next == self.goal:
+            return "SUCCESS"
+        neighbors = next.expand()
+        for n in neighbors:
+            try:
+                idx = self.open_list.index(n)
+                old_n = self.open_list[idx]
+                new_n = self.union_nodes()
+            except:
+                idx = -1
+            if idx != -1: # n in
+                self.open_list[self.open_list.index(n)]
+            else:
+                pass
+
 
 

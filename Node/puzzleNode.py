@@ -1,8 +1,10 @@
 from Node.node import *
+from collections import defaultdict
+
 
 class PuzzleNode(Node):
 
-    def __init__(self, position, operators, cost) -> None:
+    def __init__(self, position, operators={k: False for k in ("UP", "RIGHT", "DOWN", "LEFT")}, cost=1) -> None:
         super().__init__(position, operators, cost)
         self.PUZZLE_NUM_ROWS = len(position)
         self.PUZZLE_NUM_COLUMNS = len(position[0])
@@ -23,17 +25,17 @@ class PuzzleNode(Node):
         moves = []
         i, j = self._get_coordinates(0)  # blank space
 
-        if i > 0 :
-            moves.append(Puzzle(self._swap(i, j, i - 1, j)))  # move up
+        if i > 0 and not self.operators["UP"]:
+            moves.append([PuzzleNode(self._swap(i, j, i - 1, j), cost=self.cost + 1), "DOWN"])  # move up
 
         if j < self.PUZZLE_NUM_COLUMNS - 1:
-            moves.append(Puzzle(self._swap(i, j, i, j + 1)))  # move right
+            moves.append(PuzzleNode(self._swap(i, j, i, j + 1)))  # move right
 
         if j > 0:
-            moves.append(Puzzle(self._swap(i, j, i, j - 1)))  # move left
+            moves.append(PuzzleNode(self._swap(i, j, i, j - 1)))  # move left
 
         if i < self.PUZZLE_NUM_ROWS - 1:
-            moves.append(Puzzle(self._swap(i, j, i + 1, j)))  # move down
+            moves.append(PuzzleNode(self._swap(i, j, i + 1, j)))  # move down
 
         return moves
 
