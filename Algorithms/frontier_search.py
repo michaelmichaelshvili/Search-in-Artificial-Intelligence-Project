@@ -1,10 +1,11 @@
 from Node.node import Node
 import heapq
 
+
 class FrontierSearch:
     def __init__(self, initial: Node, goal: Node) -> None:
         super().__init__()
-        self.open_list =[initial]
+        self.open_list = [initial]
         heapq.heapify(self.open_list)
         self.goal = goal
         self.max_nodes = 1
@@ -15,6 +16,7 @@ class FrontierSearch:
         return Node(node1.state,
                     {k1: v1 or v2 for ((k1, v1), (k2, v2)) in zip(node1.operators.items(), node2.operators.items())},
                     min(node1.cost, node2.cost))
+
     def expand(self):
         if len(self.open_list) == 0:
             raise Exception("The are no nodes to expansion")
@@ -26,13 +28,11 @@ class FrontierSearch:
             try:
                 idx = self.open_list.index(n)
                 old_n = self.open_list[idx]
-                new_n = self.union_nodes()
-            except:
-                idx = -1
-            if idx != -1: # n in
-                self.open_list[self.open_list.index(n)]
-            else:
-                pass
+                new_n = self.union_nodes(n, old_n)
+                del self.open_list[idx]
+                heapq.heappush(self.open_list, new_n)
+            except:  # n not in open list
+                heapq.heappush(self.open_list, n)
 
-
-
+    def do_algorithm(self):
+        pass

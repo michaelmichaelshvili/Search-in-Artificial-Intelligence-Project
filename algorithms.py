@@ -1,6 +1,7 @@
 class Strategy:
     num_expanded_nodes = 0
     solution = None
+    max_nodes = 0
 
     def do_algorithm(self):
         raise NotImplemented
@@ -36,6 +37,7 @@ class BreadthFirst(Strategy):
                 queue.append(path + [move])  # add new path at the end of the queue
 
             expanded.append(end_node.position)
+            self.max_nodes = max(self.max_nodes, len(expanded) + len(queue))
             num_expanded_nodes += 1
 
             if end_node.position == end_node.PUZZLE_END_POSITION:
@@ -86,6 +88,7 @@ class AStar(Strategy):
                 new_path = [path[0] + self._calculate_new_heuristic(move, end_node)] + path[1:] + [move]
                 queue.append(new_path)
                 expanded.append(end_node.position)
+                self.max_nodes = max(self.max_nodes, len(expanded) + len(queue))
 
             num_expanded_nodes += 1
 

@@ -6,7 +6,7 @@ class PuzzleSolver:
         self._strategy = strategy
 
     def print_performance(self):
-        print(f'{self._strategy} - Number expanded Nodes: {self._strategy.num_expanded_nodes}')
+        print(f'{self._strategy} - Number expanded Nodes: {self._strategy.num_expanded_nodes} - max: {self._strategy.max_nodes}')
 
     def print_solution(self):
         print('Solution:')
