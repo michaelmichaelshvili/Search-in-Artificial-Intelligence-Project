@@ -10,7 +10,8 @@ class Node:
         self.neighbors = []
         self.cost = cost
 
-    def __eq__(self, o: object) -> bool:
+    def __eq__(self, o) -> bool:
+        print(type(o))
         return self.state == o.state if type(o) is Node else False
 
     def __ne__(self, other):
@@ -26,4 +27,7 @@ class Node:
         return self.__str__()
 
     def expand(self):
+        raise NotImplemented
+
+    def union(self, o):
         raise NotImplemented

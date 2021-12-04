@@ -10,7 +10,6 @@ class PuzzleNode(Node):
         else:
             operators = {k: False if k not in operators else True for k in ("UP", "RIGHT", "DOWN", "LEFT")}
         super().__init__(position, operators, cost)
-
         self.PUZZLE_NUM_ROWS = len(position)
         self.PUZZLE_NUM_COLUMNS = len(position[0])
         self.PUZZLE_END_POSITION = self._generate_end_position()
@@ -26,6 +25,9 @@ class PuzzleNode(Node):
         puzzle_string += '—' * 13 + '\n'
         return puzzle_string
 
+    def __eq__(self, o) -> bool:
+        return self.state == o.state if type(o) is PuzzleNode else False
+
     def expand(self):
         moves = []
         i, j = self._get_coordinates(0)  # blank space
@@ -34,15 +36,22 @@ class PuzzleNode(Node):
             moves.append(PuzzleNode(self._swap(i, j, i - 1, j), cost=self.cost + 1, operators={"DOWN": True}))  # move up
 
         if j < self.PUZZLE_NUM_COLUMNS - 1 and not self.operators["RIGHT"]:
-            moves.append(PuzzleNode(self._swap(i, j, i, j + 1), cost=self.cost+1, operators={"LEFT": True}))  # move right
+            moves.append(PuzzleNode(self._swap(i, j, i, j + 1), cost=self.cost + 1, operators={"LEFT": True}))  # move right
 
         if j > 0 and not self.operators["LEFT"]:
-            moves.append(PuzzleNode(self._swap(i, j, i, j - 1), cost=self.cost+1, operators={"RIGHT": True}))  # move left
+            moves.append(PuzzleNode(self._swap(i, j, i, j - 1), cost=self.cost + 1, operators={"RIGHT": True}))  # move left
 
         if i < self.PUZZLE_NUM_ROWS - 1 and not self.operators["DOWN"]:
-            moves.append(PuzzleNode(self._swap(i, j, i + 1, j), cost=self.cost+1, operators={"UP": True}))  # move down
+            moves.append(PuzzleNode(self._swap(i, j, i + 1, j), cost=self.cost + 1, operators={"UP": True}))  # move down
 
         return moves
+
+    def union(self, o):
+        if self.state != o.state:
+            raise ValueError("The nodes are not in same state")
+        return PuzzleNode(self.state,
+                          {k1: v1 or v2 for ((k1, v1), (k2, v2)) in zip(self.operators.items(), o.operators.items())},
+                          min(self.cost, o.cost))
 
     def _swap(self, x1, y1, x2, y2):
         """
@@ -83,3 +92,29 @@ class PuzzleNode(Node):
 
         end_position[-1][-1] = 0
         return end_position
+
+    def heuristic_misplaced(self):
+        """
+        Counts the number of misplaced tiles
+        """
+        misplaced = 0
+
+        for i in range(self.PUZZLE_NUM_ROWS):
+            for j in range(self.PUZZLE_NUM_COLUMNS):
+                if self.state[i][j] != self.PUZZLE_END_POSITION[i][j]:
+                    misplaced += 1
+
+        return misplaced
+
+    def heuristic_manhattan_distance(self):
+        """
+        Counts how much is a tile misplaced from the original position
+        """
+        distance = 0
+
+        for i in range(self.PUZZLE_NUM_ROWS):
+            for j in range(self.PUZZLE_NUM_COLUMNS):
+                i1, j1 = self._get_coordinates(self.state[i][j], self.PUZZLE_END_POSITION)
+                distance += abs(i - i1) + abs(j - j1)
+
+        return distance

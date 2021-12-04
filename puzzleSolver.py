@@ -14,7 +14,7 @@ class PuzzleSolver:
             print(s)
 
     def run(self):
-        if not self._strategy.start.is_solvable():
-            raise RuntimeError('This puzzle is not solvable')
+        # if not self._strategy.start.is_solvable():
+        #     raise RuntimeError('This puzzle is not solvable')
 
         self._strategy.do_algorithm()
