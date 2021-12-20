@@ -13,8 +13,11 @@ class BestFirstFrontierSearch(Strategy):
     def __str__(self):
         return 'Breadth First FrontierSearch'
 
+    def cost_function(self, parent, child):
+        return parent.cost + 1
+
     def expand(self, node):
-        neighbors = node.expand(lambda parent, child: [parent.cost[0] +1])
+        neighbors = node.expand(self.cost_function)
         self.num_expanded_nodes += 1
         for n in neighbors:
             try:

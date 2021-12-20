@@ -63,7 +63,7 @@ class PuzzleNode(Node):
             raise ValueError("The nodes are not in same state")
         return PuzzleNode(self.state,
                           {k1: v1 or v2 for ((k1, v1), (k2, v2)) in zip(self.operators.items(), o.operators.items())},
-                          self.cost if sum(self.cost) < sum(o.cost) else o.cost)
+                          min(self.cost, o.state))
 
     def _swap(self, x1, y1, x2, y2):
         """

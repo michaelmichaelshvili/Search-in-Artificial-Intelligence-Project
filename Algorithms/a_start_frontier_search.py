@@ -6,7 +6,7 @@ from Node.node import Node
 class AStarFrontierSearch(Strategy):
     def __init__(self, initial) -> None:
         super().__init__()
-        initial.cost = [0, initial.heuristic_manhattan_distance()]
+        initial.cost = initial.heuristic_manhattan_distance()
         self.open_list = [initial]
         heapq.heapify(self.open_list)
         self.goal = initial.PUZZLE_END_POSITION
@@ -15,8 +15,11 @@ class AStarFrontierSearch(Strategy):
     def __str__(self):
         return 'A* FrontierSearch'
 
+    def cost_function(self, parent, child):
+        return parent.cost + child.heuristic_manhattan_distance() - parent.heuristic_manhattan_distance()
+
     def expand(self, node):
-        neighbors = node.expand(lambda parent, child: [parent.cost[0] , child.heuristic_manhattan_distance() - parent.heuristic_manhattan_distance()])
+        neighbors = node.expand(self.cost_function)
         self.num_expanded_nodes += 1
         for n in neighbors:
             try:

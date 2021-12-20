@@ -8,6 +8,7 @@ from Node.puzzle_node import *
 from math import sqrt
 from random import shuffle
 import numpy as np
+from threading import Timer
 
 N = 4
 
@@ -94,7 +95,6 @@ if __name__ == '__main__':
 
         for strategy in [AStar]:
             p = PuzzleSolver(strategy(puzzle))
-            print(p)
             p.run()
             p.print_performance()
             p.print_solution()
