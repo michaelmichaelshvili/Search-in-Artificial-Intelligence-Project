@@ -5,7 +5,7 @@ class PuzzleNode(Node):
 
     def __init__(self, position, operators=None, cost=None) -> None:
         if cost is None:
-            cost = [1]
+            cost = 1
         if operators is None:
             operators = {k: False for k in ("UP", "RIGHT", "DOWN", "LEFT")}
         else:
@@ -63,7 +63,7 @@ class PuzzleNode(Node):
             raise ValueError("The nodes are not in same state")
         return PuzzleNode(self.state,
                           {k1: v1 or v2 for ((k1, v1), (k2, v2)) in zip(self.operators.items(), o.operators.items())},
-                          min(self.cost, o.state))
+                          min(self.cost, o.cost))
 
     def _swap(self, x1, y1, x2, y2):
         """

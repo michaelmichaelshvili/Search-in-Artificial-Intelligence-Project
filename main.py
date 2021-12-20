@@ -2,7 +2,7 @@ from algorithms import *
 from domains import *
 from puzzleSolver import *
 from Algorithms.best_first_frontier_search import *
-from Algorithms.a_start_frontier_search import *
+from Algorithms.a_star_frontier_search import *
 from Node.node import *
 from Node.puzzle_node import *
 from math import sqrt
