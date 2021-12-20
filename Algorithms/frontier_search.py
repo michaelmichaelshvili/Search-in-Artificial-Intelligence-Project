@@ -13,9 +13,9 @@ class FrontierSearch:
     def union_nodes(self, node1: Node, node2: Node):
         if (node1.state != node2.state):
             raise ValueError("The nodes are not in same state")
-        return Node(node1.state,
+        return node1.__class__(node1.state,
                     {k1: v1 or v2 for ((k1, v1), (k2, v2)) in zip(node1.operators.items(), node2.operators.items())},
-                    min(node1.cost, node2.cost))
+                    node1.cost if sum(node1.cost) < sum(node2.cost) else node2.cost)
 
     def expand(self):
         if len(self.open_list) == 0:

@@ -1,10 +1,11 @@
 from Node.node import *
-from collections import defaultdict
 
 
 class PuzzleNode(Node):
 
-    def __init__(self, position, operators=None, cost=1) -> None:
+    def __init__(self, position, operators=None, cost=None) -> None:
+        if cost is None:
+            cost = [1]
         if operators is None:
             operators = {k: False for k in ("UP", "RIGHT", "DOWN", "LEFT")}
         else:
@@ -28,22 +29,33 @@ class PuzzleNode(Node):
     def __eq__(self, o) -> bool:
         return self.state == o.state if type(o) is PuzzleNode else False
 
-    def expand(self):
+    def expand(self, cost_function):
         moves = []
         i, j = self._get_coordinates(0)  # blank space
 
         if i > 0 and not self.operators["UP"]:
-            moves.append(PuzzleNode(self._swap(i, j, i - 1, j), cost=self.cost + 1, operators={"DOWN": True}))  # move up
+            next_node = PuzzleNode(self._swap(i, j, i - 1, j), operators={"DOWN": True})
+            next_node_cost = cost_function(self, next_node)
+            next_node.cost = next_node_cost
+            moves.append(next_node)  # move up
 
         if j < self.PUZZLE_NUM_COLUMNS - 1 and not self.operators["RIGHT"]:
-            moves.append(PuzzleNode(self._swap(i, j, i, j + 1), cost=self.cost + 1, operators={"LEFT": True}))  # move right
+            next_node = PuzzleNode(self._swap(i, j, i, j + 1), operators={"LEFT": True})
+            next_node_cost = cost_function(self, next_node)
+            next_node.cost = next_node_cost
+            moves.append(next_node)  # move right
 
         if j > 0 and not self.operators["LEFT"]:
-            moves.append(PuzzleNode(self._swap(i, j, i, j - 1), cost=self.cost + 1, operators={"RIGHT": True}))  # move left
+            next_node = PuzzleNode(self._swap(i, j, i, j - 1), operators={"RIGHT": True})
+            next_node_cost = cost_function(self, next_node)
+            next_node.cost = next_node_cost
+            moves.append(next_node)  # move left
 
         if i < self.PUZZLE_NUM_ROWS - 1 and not self.operators["DOWN"]:
-            moves.append(PuzzleNode(self._swap(i, j, i + 1, j), cost=self.cost + 1, operators={"UP": True}))  # move down
-
+            next_node = PuzzleNode(self._swap(i, j, i + 1, j), operators={"UP": True})
+            next_node_cost = cost_function(self, next_node)
+            next_node.cost = next_node_cost
+            moves.append(next_node)  # move down
         return moves
 
     def union(self, o):
@@ -51,7 +63,7 @@ class PuzzleNode(Node):
             raise ValueError("The nodes are not in same state")
         return PuzzleNode(self.state,
                           {k1: v1 or v2 for ((k1, v1), (k2, v2)) in zip(self.operators.items(), o.operators.items())},
-                          min(self.cost, o.cost))
+                          self.cost if sum(self.cost) < sum(o.cost) else o.cost)
 
     def _swap(self, x1, y1, x2, y2):
         """

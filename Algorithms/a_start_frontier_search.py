@@ -1,20 +1,22 @@
-import heapq
 from strategy import *
+import heapq
+from Node.node import Node
 
 
-class BestFirstFrontierSearch(Strategy):
+class AStarFrontierSearch(Strategy):
     def __init__(self, initial) -> None:
         super().__init__()
+        initial.cost = [0, initial.heuristic_manhattan_distance()]
         self.open_list = [initial]
         heapq.heapify(self.open_list)
         self.goal = initial.PUZZLE_END_POSITION
         self.max_nodes = 1
 
     def __str__(self):
-        return 'Breadth First FrontierSearch'
+        return 'A* FrontierSearch'
 
     def expand(self, node):
-        neighbors = node.expand(lambda parent, child: [parent.cost[0] +1])
+        neighbors = node.expand(lambda parent, child: [parent.cost[0] , child.heuristic_manhattan_distance() - parent.heuristic_manhattan_distance()])
         self.num_expanded_nodes += 1
         for n in neighbors:
             try:
@@ -36,4 +38,3 @@ class BestFirstFrontierSearch(Strategy):
                 return "SUCCESS"
             self.expand(next)
         return "The are no nodes for expansion"
-
