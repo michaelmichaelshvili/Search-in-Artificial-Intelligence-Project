@@ -1,19 +1,23 @@
 from strategy import *
-import heapq
 from Node.node import Node
+from Node.puzzle_node import PuzzleNode
 
 
 class AStarFrontierSearch(Strategy):
     def __init__(self, initial) -> None:
         super().__init__()
-        initial.cost = initial.heuristic_manhattan_distance()
-        self.open_list = [initial]
+        self.initial = PuzzleNode(initial)
+        self.initial.cost = self.initial.heuristic_manhattan_distance()
+        self.open_list = [self.initial]
         # heapq.heapify(self.open_list)
-        self.goal = initial.PUZZLE_END_POSITION
+        self.goal = self.initial.PUZZLE_END_POSITION
         self.max_nodes = 1
 
     def __str__(self):
-        return 'A* FrontierSearch'
+        return 'A* Frontier Search'
+
+    def __repr__(self):
+        return self.__str__()
 
     def cost_function(self, parent, child):
         return parent.cost + child.heuristic_manhattan_distance() - parent.heuristic_manhattan_distance()
@@ -61,4 +65,4 @@ class AStarFrontierSearch(Strategy):
             if next_node.state == self.goal:
                 return "SUCCESS"
             self.expand(next_node)
-        return "The are no nodes for expansion"
+        return "The are no more nodes for expansion"
