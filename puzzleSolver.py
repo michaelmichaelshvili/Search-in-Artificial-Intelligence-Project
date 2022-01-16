@@ -10,7 +10,7 @@ class PuzzleSolver:
         print(f'{self._strategy} - Number expanded Nodes: {self._strategy.num_expanded_nodes} - max: {self._strategy.max_nodes}')
 
     def print_solution(self):
-        if self._strategy.solution:
+        if self._strategy.solution[-1].state == self._strategy.goal:
             print('Solution:')
             for s in self._strategy.solution:
                 print(s)
@@ -21,4 +21,4 @@ class PuzzleSolver:
         # if not self._strategy.start.is_solvable():
         #     raise RuntimeError('This puzzle is not solvable')
 
-        self._strategy.do_algorithm()
+        return self._strategy.do_algorithm()
