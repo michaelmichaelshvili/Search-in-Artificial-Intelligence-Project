@@ -7,6 +7,7 @@ class Puzzle:
         self.PUZZLE_NUM_ROWS = len(position)
         self.PUZZLE_NUM_COLUMNS = len(position[0])
         self.PUZZLE_END_POSITION = self._generate_end_position()
+        x = 0
 
     def __str__(self):
         """
