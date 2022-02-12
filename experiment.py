@@ -81,7 +81,7 @@ def run_strategy(solver, q, idx, strategy_finished):
 
 def create_result_file(strategies):
     header = ['puzzle']
-    measures = ['nodes expanded', 'max nodes stored']
+    measures = ['nodes expanded', 'max nodes stored', 'time']
     for s in strategies:
         for m in measures:
             header.append(s.__name__ + " " + m)
